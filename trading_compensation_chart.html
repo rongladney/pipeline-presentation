@@ -1,360 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Levels Exponential Growth</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Levels Exponential Growth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f1f5f9;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-            color: #1e293b;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: #1e293b;
+    }
 
-        .card {
-            width: 100%;
-            max-width: 1000px;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 32px rgba(15,62,116,0.10), 0 1px 4px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
+    .card {
+      width: 100%;
+      max-width: 1000px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 32px rgba(15,62,116,0.10), 0 1px 4px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
 
-        /* ── Top controls bar ── */
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
 
-        .controls-left .eyebrow {
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #4f46e5;
-        }
+    .controls-left .eyebrow {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #4f46e5;
+    }
 
-        .controls-left h1 {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: #0f172a;
-            margin-top: 0.15rem;
-        }
+    .controls-left h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 0.15rem;
+    }
 
-        .controls-left p {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 0.15rem;
-        }
+    .controls-left p {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 0.15rem;
+    }
 
-        .controls-right {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
+    .controls-right {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        .input-group label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #475569;
-            white-space: nowrap;
-        }
+    .slider-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #475569;
+      white-space: nowrap;
+    }
 
-        .input-group input[type="number"] {
-            width: 7rem;
-            padding: 0.4rem 0.65rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
+    .slider-group input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100px;
+      height: 4px;
+      border-radius: 2px;
+      background: #cbd5e1;
+      outline: none;
+      cursor: pointer;
+    }
 
-        .input-group input[type="number"]:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
-        }
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(79,70,229,0.35);
+    }
 
-        .btn {
-            padding: 0.4rem 0.85rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-            white-space: nowrap;
-        }
+    .slider-group input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(79,70,229,0.35);
+    }
 
-        .btn:active { transform: scale(0.97); }
+    .slider-group input[type="number"] {
+      width: 5.5rem;
+      padding: 0.4rem 0.65rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
 
-        .btn-ghost {
-            background: #f1f5f9;
-            color: #475569;
-        }
-        .btn-ghost:hover { background: #e2e8f0; color: #1e293b; }
+    .slider-group input[type="number"]:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+    }
 
-        .btn-primary {
-            background: #4f46e5;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            box-shadow: 0 1px 4px rgba(79,70,229,0.25);
-        }
-        .btn-primary:hover { background: #4338ca; }
+    .btn {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
 
-        /* ── Chart heading ── */
-        .chart-header {
-            padding: 1.75rem 2rem 1rem;
-        }
+    .btn:active { transform: scale(0.97); }
 
-        .chart-header h2 {
-            font-size: 2rem;
-            font-weight: 900;
-            color: #0f172a;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-        }
+    .btn-ghost {
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .btn-ghost:hover { background: #e2e8f0; color: #1e293b; }
 
-        /* ── Table ── */
-        .table-wrap {
-            overflow-x: auto;
-            padding: 0 1.25rem 1.5rem;
-        }
+    .btn-primary {
+      background: #4f46e5;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 1px 4px rgba(79,70,229,0.25);
+    }
+    .btn-primary:hover { background: #4338ca; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1.5px solid #94a3b8;
-            border-radius: 6px;
-            overflow: hidden;
-        }
+    /* ── Chart header ── */
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1.75rem 2rem 1rem;
+    }
 
-        thead tr {
-            background: #0f3e74;
-        }
+    .chart-header h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
 
-        thead th {
-            padding: 0.75rem 1.1rem;
-            text-align: left;
-            font-size: 0.93rem;
-            font-weight: 700;
-            color: #fff;
-            border-right: 1.5px solid rgba(255,255,255,0.25);
-            white-space: nowrap;
-        }
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 0.25rem;
+      background: #f1f5f9;
+      padding: 0.25rem;
+      border-radius: 10px;
+    }
 
-        thead th:last-child { border-right: none; }
+    .tab {
+      padding: 0.35rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+      color: #64748b;
+      transition: all 0.15s;
+    }
 
-        tbody tr {
-            border-top: 1px solid #cbd5e1;
-            transition: background 0.1s;
-        }
+    .tab.active {
+      background: #fff;
+      color: #0f172a;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
 
-        tbody tr:hover { background: #f8fafc; }
+    .tab:hover:not(.active) { color: #1e293b; }
 
-        tbody td {
-            padding: 0.6rem 1.1rem;
-            font-size: 0.93rem;
-            color: #0f172a;
-            border-right: 1px solid #cbd5e1;
-            font-variant-numeric: tabular-nums;
-            text-align: right;
-        }
+    /* ── Views ── */
+    .view { display: none; }
+    .view.active { display: block; }
 
-        tbody td:last-child { border-right: none; }
+    /* ── Table ── */
+    .table-wrap {
+      overflow-x: auto;
+      padding: 0 1.25rem 1.5rem;
+    }
 
-        /* Step cell — right-aligned with extra right padding to match screenshot */
-        tbody td.step-cell {
-            font-weight: 600;
-            text-align: right;
-            padding-right: 2rem;
-            border-right: 1.5px solid #94a3b8;
-            width: 6rem;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #94a3b8;
+      border-radius: 6px;
+      overflow: hidden;
+    }
 
-        /* Level cells — right-aligned */
-        tbody td.val-cell { text-align: right; }
+    thead tr { background: #0f3e74; }
 
-        /* Highlight the largest column subtly */
-        tbody td:nth-child(6) { color: #1e40af; font-weight: 600; }
+    thead th {
+      padding: 0.75rem 1.1rem;
+      text-align: left;
+      font-size: 0.93rem;
+      font-weight: 700;
+      color: #fff;
+      border-right: 1.5px solid rgba(255,255,255,0.25);
+      white-space: nowrap;
+      transition: background 0.15s;
+      user-select: none;
+    }
 
-        /* ── Footer note ── */
-        .footer-note {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 0.75rem 2rem 1.5rem;
-            font-size: 0.72rem;
-            color: #94a3b8;
-        }
+    thead th.clickable { cursor: pointer; }
+    thead th.clickable:hover { background: #1a5298; }
+    thead th.col-active { background: #1a5298; box-shadow: inset 0 -2px 0 #6366f1; }
+    thead th:last-child { border-right: none; }
 
-        /* ── Toast ── */
-        .toast {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            background: #0f3e74;
-            color: #fff;
-            padding: 0.65rem 1.1rem;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            box-shadow: 0 4px 16px rgba(15,62,116,0.25);
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.25s, transform 0.25s;
-            pointer-events: none;
-        }
-        .toast.show { opacity: 1; transform: translateY(0); }
+    tbody tr {
+      border-top: 1px solid #cbd5e1;
+      transition: background 0.1s;
+    }
 
-        @media (max-width: 600px) {
-            .controls { padding: 1.1rem 1.1rem; }
-            .chart-header { padding: 1.1rem 1.1rem 0.75rem; }
-            .table-wrap { padding: 0 0.5rem 1.25rem; }
-            .footer-note { padding: 0.5rem 0.75rem 1rem; }
-            .chart-header h2 { font-size: 1.4rem; }
-        }
-    </style>
+    tbody tr:hover { background: #f0f4ff; }
+
+    tbody td {
+      padding: 0.6rem 1.1rem;
+      font-size: 0.93rem;
+      color: #0f172a;
+      border-right: 1px solid #cbd5e1;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    tbody td:last-child { border-right: none; }
+
+    tbody td.step-cell {
+      font-weight: 600;
+      text-align: right;
+      padding-right: 2rem;
+      border-right: 1.5px solid #94a3b8;
+      width: 6rem;
+    }
+
+    /* Column highlight */
+    tbody td.col-highlight {
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: 700;
+    }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0.25rem 1.25rem 0.75rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      user-select: none;
+      padding: 0.28rem 0.65rem;
+      border-radius: 20px;
+      border: 1.5px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .legend-item:hover { background: #f8fafc; }
+
+    .legend-item.active {
+      border-color: currentColor;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .legend-item.disabled { opacity: 0.35; }
+    .legend-item.disabled .legend-label { color: #94a3b8; }
+
+    /* ── Chart ── */
+    .chart-view-wrap {
+      padding: 0 1.25rem 1.5rem;
+      position: relative;
+    }
+
+    .svg-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    svg.chart {
+      width: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.77rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.12s;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.28);
+      z-index: 10;
+      min-width: 175px;
+    }
+
+    .chart-tooltip.visible { opacity: 1; }
+
+    .tip-step {
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding-bottom: 0.3rem;
+    }
+
+    .tip-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.22rem;
+    }
+
+    .tip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .tip-lbl {
+      color: #94a3b8;
+      flex: 1;
+      font-size: 0.73rem;
+    }
+
+    .tip-val {
+      font-weight: 700;
+      margin-left: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* ── Footer ── */
+    .footer-note {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem 1.5rem;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: #0f3e74;
+      color: #fff;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(15,62,116,0.25);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 640px) {
+      .controls { padding: 1rem 1rem; }
+      .chart-header { padding: 1rem 1rem 0.75rem; }
+      .chart-header h2 { font-size: 1.4rem; }
+      .table-wrap { padding: 0 0.5rem 1.25rem; }
+      .footer-note { padding: 0.5rem 0.75rem 1rem; }
+      .slider-group input[type="range"] { width: 65px; }
+    }
+  </style>
 </head>
 <body>
 
 <div class="card">
 
-    <!-- Controls -->
-    <div class="controls">
-        <div class="controls-left">
-            <div class="eyebrow">Interactive Tool</div>
-            <h1>Trading Levels Customizer</h1>
-            <p>Adjust the baseline to project different growth targets.</p>
-        </div>
-        <div class="controls-right">
-            <div class="input-group">
-                <label for="baseValue">Base Step 1 ($):</label>
-                <input type="number" id="baseValue" value="100" min="1" step="10" />
-            </div>
-            <button class="btn btn-ghost" onclick="resetToOriginal()">Reset to Original</button>
-            <button class="btn btn-primary" onclick="exportToCSV()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
-                Export CSV
-            </button>
-        </div>
+  <!-- Controls -->
+  <div class="controls">
+    <div class="controls-left">
+      <div class="eyebrow">Interactive Tool</div>
+      <h1>Trading Levels Customizer</h1>
+      <p>Drag to adjust base · click column headers to highlight · toggle levels in chart.</p>
     </div>
-
-    <!-- Chart title -->
-    <div class="chart-header">
-        <h2>Trading Levels Exponential Growth</h2>
+    <div class="controls-right">
+      <div class="slider-group">
+        <label>Base $:</label>
+        <input type="range" id="baseSlider" min="0" max="100" value="33" />
+        <input type="number" id="baseValue" value="100" min="1" />
+      </div>
+      <button class="btn btn-ghost" onclick="resetToOriginal()">Reset</button>
+      <button class="btn btn-primary" onclick="exportToCSV()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Export CSV
+      </button>
     </div>
+  </div>
 
-    <!-- Table -->
+  <!-- Title + Tab switcher -->
+  <div class="chart-header">
+    <h2>Trading Levels Exponential Growth</h2>
+    <div class="tabs">
+      <button class="tab active" id="tab-table" onclick="switchTab('table')">Table</button>
+      <button class="tab" id="tab-chart" onclick="switchTab('chart')">Chart</button>
+    </div>
+  </div>
+
+  <!-- Table view -->
+  <div class="view active" id="view-table">
     <div class="table-wrap">
-        <table id="compensationTable">
-            <thead>
-                <tr>
-                    <th style="width:6rem">Step</th>
-                    <th>Level 1</th>
-                    <th>Level 2</th>
-                    <th>Level 3</th>
-                    <th>Level 4</th>
-                    <th>Level 5</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+      <table id="compensationTable">
+        <thead>
+          <tr>
+            <th style="width:6rem">Step</th>
+            <th class="clickable" onclick="toggleCol(1)">Level 1</th>
+            <th class="clickable" onclick="toggleCol(2)">Level 2</th>
+            <th class="clickable" onclick="toggleCol(3)">Level 3</th>
+            <th class="clickable" onclick="toggleCol(4)">Level 4</th>
+            <th class="clickable" onclick="toggleCol(5)">Level 5</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
+  </div>
 
-    <!-- Footer -->
-    <div class="footer-note">
-        <span>Values scale by ×10 per level across each row.</span>
-        <span>Formula: Value = Step × Base × 10<sup>(Level−1)</sup></span>
+  <!-- Chart view -->
+  <div class="view" id="view-chart">
+    <div class="legend" id="legend"></div>
+    <div class="chart-view-wrap">
+      <div class="svg-wrap" id="svgWrap">
+        <svg class="chart" id="chartSvg" viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
     </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    <span>Values scale ×10 per level across each row.</span>
+    <span>Formula: Value = Step × Base × 10<sup>(Level−1)</sup></span>
+  </div>
 
 </div>
 
 <div class="toast" id="toast">CSV downloaded!</div>
 
 <script>
+  // ── Constants ──
+  const LEVELS = 5;
+  const STEPS = 9;
+  const COLORS = ['#6366f1','#0ea5e9','#10b981','#f59e0b','#ef4444'];
+  const SVG_W = 900, SVG_H = 380;
+  const PAD = { top: 24, right: 32, bottom: 52, left: 78 };
+  const CW = SVG_W - PAD.left - PAD.right;
+  const CH = SVG_H - PAD.top - PAD.bottom;
+
+  // ── State ──
+  let currentBase = 100;
+  let prevBase = 100;
+  let activeCol = null;
+  const levelVisible = [true, true, true, true, true];
+  let currentView = 'table';
+  let animRaf = null;
+  let animStartTime = null;
+  let animFromBase = 100;
+  let animToBase = 100;
+  const ANIM_DUR = 320;
+
+  // ── Formatters ──
+  const fmt = n => new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', maximumFractionDigits: 0
+  }).format(n);
+
+  const fmtShort = n => {
+    if (n >= 1e6) return '$' + (n / 1e6).toFixed(n >= 10e6 ? 0 : 1) + 'M';
+    if (n >= 1e3) return '$' + (n / 1e3).toFixed(n >= 100e3 ? 0 : 0) + 'K';
+    return '$' + n;
+  };
+
+  // Logarithmic slider mapping: slider 0-100 → base $10-$10,000
+  const sliderToBase = s => Math.round(10 * Math.pow(1000, s / 100));
+  const baseToSlider = b => Math.round(Math.log10(b / 10) / Math.log10(1000) * 100);
+
+  function levelVals(base, step) {
+    const l1 = step * base;
+    return [l1, l1*10, l1*100, l1*1000, l1*10000];
+  }
+
+  // ── Table ──
+  function buildTable(base) {
     const tbody = document.querySelector('#compensationTable tbody');
-    const baseInput = document.getElementById('baseValue');
+    tbody.innerHTML = '';
+    for (let s = 1; s <= STEPS; s++) {
+      const vals = levelVals(base, s);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="step-cell">${s}</td>` +
+        vals.map((v, li) =>
+          `<td class="${'val-cell' + (activeCol === li + 1 ? ' col-highlight' : '')}">${fmt(v)}</td>`
+        ).join('');
+      tbody.appendChild(tr);
+    }
+    updateColHeaders();
+  }
 
-    const fmt = n => new Intl.NumberFormat('en-US', {
-        style: 'currency', currency: 'USD', maximumFractionDigits: 0
-    }).format(n);
+  function animateTable(fromBase, toBase) {
+    if (animRaf) cancelAnimationFrame(animRaf);
+    animFromBase = fromBase;
+    animToBase = toBase;
+    animStartTime = null;
 
-    function renderTable(base) {
-        tbody.innerHTML = '';
-        for (let step = 1; step <= 9; step++) {
-            const l1 = step * base;
-            const tr = document.createElement('tr');
-            tr.innerHTML =
-                `<td class="step-cell">${step}</td>` +
-                [l1, l1*10, l1*100, l1*1000, l1*10000]
-                    .map(v => `<td class="val-cell">${fmt(v)}</td>`)
-                    .join('');
-            tbody.appendChild(tr);
-        }
+    const cells = document.querySelectorAll('#compensationTable tbody td.val-cell');
+    if (!cells.length) { buildTable(toBase); return; }
+
+    function tick(ts) {
+      if (!animStartTime) animStartTime = ts;
+      const t = Math.min((ts - animStartTime) / ANIM_DUR, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const interpBase = animFromBase + (animToBase - animFromBase) * ease;
+      let ci = 0;
+      for (let s = 1; s <= STEPS; s++) {
+        const l1 = s * interpBase;
+        [l1, l1*10, l1*100, l1*1000, l1*10000].forEach(v => {
+          if (cells[ci]) cells[ci].textContent = fmt(v);
+          ci++;
+        });
+      }
+      if (t < 1) animRaf = requestAnimationFrame(tick);
+    }
+    animRaf = requestAnimationFrame(tick);
+  }
+
+  function updateColHeaders() {
+    document.querySelectorAll('#compensationTable thead th.clickable').forEach((th, i) => {
+      th.classList.toggle('col-active', i + 1 === activeCol);
+    });
+  }
+
+  function toggleCol(col) {
+    activeCol = (activeCol === col) ? null : col;
+    updateColHeaders();
+    document.querySelectorAll('#compensationTable tbody td.val-cell').forEach((td, i) => {
+      td.classList.toggle('col-highlight', (i % LEVELS) + 1 === activeCol);
+    });
+  }
+
+  // ── Chart ──
+  function svgNS(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+  function attr(el, obj) {
+    Object.entries(obj).forEach(([k, v]) => el.setAttribute(k, v));
+    return el;
+  }
+
+  function renderChart(base) {
+    const svg = document.getElementById('chartSvg');
+    svg.innerHTML = '';
+
+    const series = COLORS.map((color, li) => ({
+      color,
+      label: `Level ${li + 1}`,
+      visible: levelVisible[li],
+      vals: Array.from({length: STEPS}, (_, i) => levelVals(base, i + 1)[li])
+    }));
+
+    const allVals = series.filter(s => s.visible).flatMap(s => s.vals);
+    if (!allVals.length) return;
+
+    const logMin = Math.log10(Math.min(...allVals));
+    const logMax = Math.log10(Math.max(...allVals));
+    const logRange = logMax - logMin || 1;
+
+    const xOf = i => PAD.left + (i / (STEPS - 1)) * CW;
+    const yOf = v => PAD.top + CH - ((Math.log10(v) - logMin) / logRange) * CH;
+
+    // Gridlines + Y-axis labels
+    const g = svgNS('g');
+    for (let e = Math.floor(logMin); e <= Math.ceil(logMax); e++) {
+      const v = Math.pow(10, e);
+      const y = yOf(v);
+      if (y < PAD.top - 5 || y > PAD.top + CH + 5) continue;
+      g.appendChild(attr(svgNS('line'), {
+        x1: PAD.left, y1: y, x2: PAD.left + CW, y2: y,
+        stroke: '#e2e8f0', 'stroke-width': 1
+      }));
+      const lbl = attr(svgNS('text'), {
+        x: PAD.left - 8, y: y + 4,
+        'text-anchor': 'end', fill: '#94a3b8',
+        'font-size': 11, 'font-family': 'Inter,sans-serif'
+      });
+      lbl.textContent = fmtShort(v);
+      g.appendChild(lbl);
+    }
+    svg.appendChild(g);
+
+    // Axes
+    svg.appendChild(attr(svgNS('line'), {
+      x1: PAD.left, y1: PAD.top, x2: PAD.left, y2: PAD.top + CH,
+      stroke: '#94a3b8', 'stroke-width': 1.5
+    }));
+    svg.appendChild(attr(svgNS('line'), {
+      x1: PAD.left, y1: PAD.top + CH, x2: PAD.left + CW, y2: PAD.top + CH,
+      stroke: '#94a3b8', 'stroke-width': 1.5
+    }));
+
+    // X-axis labels
+    for (let i = 0; i < STEPS; i++) {
+      const x = xOf(i);
+      svg.appendChild(attr(svgNS('line'), {
+        x1: x, y1: PAD.top + CH, x2: x, y2: PAD.top + CH + 5,
+        stroke: '#cbd5e1', 'stroke-width': 1
+      }));
+      const lbl = attr(svgNS('text'), {
+        x, y: PAD.top + CH + 20,
+        'text-anchor': 'middle', fill: '#64748b',
+        'font-size': 11, 'font-family': 'Inter,sans-serif', 'font-weight': 600
+      });
+      lbl.textContent = `Step ${i + 1}`;
+      svg.appendChild(lbl);
     }
 
-    function resetToOriginal() {
-        baseInput.value = 100;
-        renderTable(100);
+    // Lines + dots
+    series.forEach(s => {
+      if (!s.visible) return;
+      const pts = s.vals.map((v, i) => `${xOf(i)},${yOf(v)}`).join(' ');
+      svg.appendChild(attr(svgNS('polyline'), {
+        points: pts, fill: 'none', stroke: s.color,
+        'stroke-width': 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round'
+      }));
+      s.vals.forEach((v, i) => {
+        svg.appendChild(attr(svgNS('circle'), {
+          cx: xOf(i), cy: yOf(v), r: 4.5,
+          fill: s.color, stroke: '#fff', 'stroke-width': 2
+        }));
+      });
+    });
+
+    // Crosshair
+    const crosshair = attr(svgNS('line'), {
+      x1: 0, y1: PAD.top, x2: 0, y2: PAD.top + CH,
+      stroke: '#475569', 'stroke-width': 1.2,
+      'stroke-dasharray': '4 3', opacity: 0
+    });
+    svg.appendChild(crosshair);
+
+    // Hit areas for hover
+    const tooltip = document.getElementById('chartTooltip');
+    const svgEl = document.getElementById('chartSvg');
+
+    for (let i = 0; i < STEPS; i++) {
+      const x = xOf(i);
+      const halfGap = (i === 0 || i === STEPS - 1)
+        ? CW / (STEPS - 1) / 2
+        : CW / (STEPS - 1) / 2;
+      const hitX = x - halfGap;
+
+      const hit = attr(svgNS('rect'), {
+        x: hitX, y: PAD.top,
+        width: halfGap * 2, height: CH,
+        fill: 'transparent', cursor: 'crosshair'
+      });
+
+      const stepIdx = i;
+      hit.addEventListener('mouseenter', () => {
+        crosshair.setAttribute('transform', `translate(${x},0)`);
+        crosshair.setAttribute('opacity', '1');
+
+        const vis = series.filter(s => s.visible);
+        tooltip.innerHTML =
+          `<div class="tip-step">Step ${stepIdx + 1}</div>` +
+          vis.map(s =>
+            `<div class="tip-row">
+              <div class="tip-dot" style="background:${s.color}"></div>
+              <span class="tip-lbl">${s.label}</span>
+              <span class="tip-val">${fmt(s.vals[stepIdx])}</span>
+            </div>`
+          ).join('');
+        tooltip.classList.add('visible');
+
+        const rect = svgEl.getBoundingClientRect();
+        const wrapRect = document.getElementById('svgWrap').getBoundingClientRect();
+        const pixX = x / SVG_W * rect.width;
+        const relX = rect.left - wrapRect.left + pixX;
+        const tipW = 200;
+        tooltip.style.left = (relX + (stepIdx < 5 ? 14 : -tipW - 14)) + 'px';
+        tooltip.style.top = (PAD.top / SVG_H * rect.height + 4) + 'px';
+      });
+
+      hit.addEventListener('mouseleave', () => {
+        crosshair.setAttribute('opacity', '0');
+        tooltip.classList.remove('visible');
+      });
+
+      svg.appendChild(hit);
     }
+  }
 
-    function exportToCSV() {
-        const base = parseFloat(baseInput.value) || 100;
-        const header = ['Step', 'Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'];
-        const rows = [header];
-        for (let step = 1; step <= 9; step++) {
-            const l1 = step * base;
-            rows.push([step, fmt(l1), fmt(l1*10), fmt(l1*100), fmt(l1*1000), fmt(l1*10000)]);
-        }
-        const csv = 'data:text/csv;charset=utf-8,' + rows.map(r => r.join(',')).join('\n');
-        const a = document.createElement('a');
-        a.href = encodeURI(csv);
-        a.download = `trading_levels_base${base}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showToast();
+  // ── Legend ──
+  function renderLegend() {
+    const el = document.getElementById('legend');
+    el.innerHTML = '';
+    COLORS.forEach((color, i) => {
+      const item = document.createElement('div');
+      item.className = 'legend-item' + (levelVisible[i] ? '' : ' disabled');
+      item.style.color = color;
+      item.innerHTML =
+        `<div class="legend-dot" style="background:${color}"></div>
+         <span class="legend-label">Level ${i + 1}</span>`;
+      item.addEventListener('click', () => {
+        levelVisible[i] = !levelVisible[i];
+        item.classList.toggle('disabled', !levelVisible[i]);
+        renderChart(currentBase);
+      });
+      el.appendChild(item);
+    });
+  }
+
+  // ── Tab switching ──
+  function switchTab(tab) {
+    currentView = tab;
+    document.getElementById('tab-table').classList.toggle('active', tab === 'table');
+    document.getElementById('tab-chart').classList.toggle('active', tab === 'chart');
+    document.getElementById('view-table').classList.toggle('active', tab === 'table');
+    document.getElementById('view-chart').classList.toggle('active', tab === 'chart');
+    if (tab === 'chart') {
+      renderLegend();
+      renderChart(currentBase);
     }
+  }
 
-    function showToast() {
-        const t = document.getElementById('toast');
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2200);
+  // ── Base update ──
+  const slider = document.getElementById('baseSlider');
+  const numInput = document.getElementById('baseValue');
+
+  function applyBase(newBase, animate = false) {
+    const val = Math.max(1, Math.round(parseFloat(newBase) || 1));
+    prevBase = currentBase;
+    currentBase = val;
+
+    slider.value = Math.max(0, Math.min(100, baseToSlider(val)));
+    numInput.value = val;
+
+    if (currentView === 'table') {
+      const hasDom = !!document.querySelector('#compensationTable tbody tr');
+      if (animate && hasDom) {
+        animateTable(prevBase, currentBase);
+      } else {
+        buildTable(currentBase);
+      }
+    } else {
+      renderChart(currentBase);
     }
+  }
 
-    baseInput.addEventListener('input', e => renderTable(parseFloat(e.target.value) || 0));
+  slider.addEventListener('input', e => {
+    const base = sliderToBase(parseInt(e.target.value));
+    applyBase(base, false);
+  });
 
-    renderTable(100);
+  numInput.addEventListener('input', e => applyBase(e.target.value, true));
+  numInput.addEventListener('change', e => applyBase(e.target.value, true));
+
+  function resetToOriginal() { applyBase(100, true); }
+
+  // ── CSV export ──
+  function exportToCSV() {
+    const header = ['Step', 'Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'];
+    const rows = [header];
+    for (let s = 1; s <= STEPS; s++) {
+      rows.push([s, ...levelVals(currentBase, s).map(fmt)]);
+    }
+    const csv = 'data:text/csv;charset=utf-8,' +
+      rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = encodeURI(csv);
+    a.download = `trading_levels_base${currentBase}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ── Init ──
+  buildTable(currentBase);
 </script>
 </body>
 </html>
